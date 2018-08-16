@@ -1,0 +1,62 @@
+/**
+ * PROBLEM STATEMENT: 
+ * You’re given the pointer to the head node of a linked list and a specific position. 
+ * Counting backwards from the tail node of the linked list, get the value of the node at the given position. 
+ * A position of 0 corresponds to the tail, 1 corresponds to the node before the tail and so on.
+ */
+ 
+/**
+ * First hack at the "Get Node Value" problem.
+ * Time Complexity: O(n)
+ * Space Complexity: O(n)
+ * In this approach, I chose to iterate through the list and copy the data elements of each node into an array list.
+ * Once complete, I simply calculated the index of the desired data item then returned its value.
+ * The index calculation was done by calculating: arrayListSize - 1 - positionFromTail.
+ * Note that this solution is not optimal since it uses extra space to make copies of the node data.
+ * See approach 2 below.
+ */
+
+ static int getNode(SinglyLinkedListNode head, int positionFromTail) {
+      //Iterate through the list
+      SinglyLinkedListNode curr = head;
+      ArrayList<Integer> list = new ArrayList<>();
+      while(curr != null) { // Iterate through the list
+        list.add(curr.data); // Put the current data into the list;
+        curr = curr.next; // Move to the next node
+      }
+
+      return list.get(list.size()-1 - positionFromTail);
+    }
+ 
+ /**
+ * This solution is inspired by the editorial solution. It uses a 2 pointer approach which is optmial since it does not
+ * require us to make extra copies of the data in an array list. We manenuver the pointers until they yield the desired
+ * index. In this approach we utilize the fact that the index of the positionFromTail is the opposite from our index going
+ * forward. That is, as we count from the head to the tail, the index increases. Inversely, as we count from the tail
+ * to the head, the index also increases (but in the opposite direction). Thereby using this fact, we can move our pointer 
+ * ahead while incrementing a counter. As we do this, we take note that when our counter from head to tail is no longer
+ * larger than the positionFromTail index. It is at this inflection point that we find our target node.
+ * Ex: data: 1 2 3 4 with positionFromTail = 1
+ * Our counter will increase from 0 -> 1 -> 2 -> 3 as we increment out pointer from head to tail.
+ * Meanwhile the positonFromTail is counter backwards... that is 3 <- 2 <- 1 <- 0. We know this because the problem states:
+ * "Position of 0 corresponds to the tail, 1 corresponds to the node before the tail and so on."
+ * Thus when our counter hits index 2, we realize that it is not longer greater than the positionFromTail.
+ * At this point, we stop incrementing our second pointer while letting our first pointer continue till the end.
+ * The end is the point denoted by ptr == null, which exits our loop and returns our desired node value.
+ *
+ */
+ 
+ static int getNode(SinglyLinkedListNode head, int positionFromTail) {
+  int index = 0;
+  SinglyLinkedListNode a = head;
+  SinglyLinkedListNode b = head;
+  
+  while(a != null) { 
+    a = a.next;
+    
+    if(counter > positionFromTail) {
+      b = b.next;
+    } 
+  } // End while
+  return b;
+ }// End getNode
